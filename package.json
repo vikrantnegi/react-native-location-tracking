@@ -7,9 +7,12 @@
     "test": "jest"
   },
   "dependencies": {
+    "haversine": "^1.1.0",
+    "lodash": "^4.17.5",
     "prop-types": "^15.6.1",
     "react": "16.3.1",
-    "react-native": "0.55.2"
+    "react-native": "0.55.2",
+    "react-native-maps": "^0.21.0"
   },
   "devDependencies": {
     "babel-eslint": "^8.2.2",
