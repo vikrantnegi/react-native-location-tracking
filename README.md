@@ -1,6 +1,8 @@
 # react-native-location-tracking
 Tracks user and draws a path as the user location changes.
 
+![alt tag](./assets/location-tracking.gif)
+
 ## Installation
 ### npm modules
 ```npm install```
