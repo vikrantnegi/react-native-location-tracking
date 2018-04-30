@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Platform
 } from "react-native";
-
 import MapView, { Marker, AnimatedRegion, Polyline } from "react-native-maps";
+import PubNubReact from "pubnub-react";
 import haversine from "haversine";
 import pick from "lodash/pick";
 
@@ -28,13 +28,21 @@ class AnimatedMarkers extends React.Component {
       latitude: 29.95539,
       longitude: 78.07513,
       routeCoordinates: [],
+      distanceTravelled: 0,
+      polyCoords: [],
+      prevLatLng: {},
       coordinate: new AnimatedRegion({
         latitude: LATITUDE,
         longitude: LONGITUDE
-      }),
-      distanceTravelled: 0,
-      prevLatLng: {}
+      })
     };
+
+    // Pubnub
+    this.pubnub = new PubNubReact({
+      publishKey: "YOUR_PUBNUB_PUBLISH_KEY",
+      subscribeKey: "YOUR_PUBNUB_SUBSCRIBE_KEY"
+    });
+    this.pubnub.init(this);
   }
 
   componentWillMount() {
@@ -49,10 +57,26 @@ class AnimatedMarkers extends React.Component {
     );
   }
 
+  componentDidUpdate() {
+    this.pubnub.publish({
+      message: {
+        latitude: this.state.latitude,
+        longitude: this.state.longitude
+      },
+      channel: "channel1"
+    });
+    console.log("component is updating");
+  }
+
   componentDidMount() {
     this.watchID = navigator.geolocation.watchPosition(
       position => {
-        const { coordinate, routeCoordinates, distanceTravelled } = this.state;
+        const {
+          coordinate,
+          polyCoords,
+          routeCoordinates,
+          distanceTravelled
+        } = this.state;
         const { latitude, longitude } = position.coords;
 
         const newCoordinate = {
@@ -79,6 +103,7 @@ class AnimatedMarkers extends React.Component {
         this.setState({
           latitude,
           longitude,
+          polyCoords: polyCoords.concat([newCoordinate]),
           routeCoordinates: routeCoordinates.concat([positionLatLngs]),
           distanceTravelled:
             distanceTravelled + this.calcDistance(newCoordinate),
@@ -92,6 +117,11 @@ class AnimatedMarkers extends React.Component {
 
   componentWillUnmount() {
     navigator.geolocation.clearWatch(this.watchID);
+
+    // Unsubscribe pubnub channel
+    this.pubnub.unsubscribe({
+      channels: ["channel1"]
+    });
   }
 
   calcDistance = newLatLng => {
@@ -109,6 +139,7 @@ class AnimatedMarkers extends React.Component {
   }
 
   render() {
+    console.log(this.state.routeCoordinates);
     return (
       <View style={styles.container}>
         <MapView
@@ -118,7 +149,7 @@ class AnimatedMarkers extends React.Component {
           loadingEnabled
           region={this.getMapRegion()}
         >
-          <Polyline coordinates={this.state.routeCoordinates} strokeWidth={2} />
+          <Polyline coordinates={this.state.polyCoords} strokeWidth={5} />
           <Marker.Animated
             ref={marker => {
               this.marker = marker;

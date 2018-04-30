@@ -8,8 +8,11 @@
   },
   "dependencies": {
     "haversine": "^1.1.0",
+    "hoek": "^5.0.3",
     "lodash": "^4.17.5",
     "prop-types": "^15.6.1",
+    "pubnub": "^4.20.3",
+    "pubnub-react": "^1.2.0",
     "react": "16.3.1",
     "react-native": "0.55.2",
     "react-native-maps": "^0.21.0"
