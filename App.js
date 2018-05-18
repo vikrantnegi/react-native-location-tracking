@@ -3,46 +3,32 @@ import {
   StyleSheet,
   View,
   Text,
-  Dimensions,
   TouchableOpacity,
   Platform
 } from "react-native";
 import MapView, { Marker, AnimatedRegion, Polyline } from "react-native-maps";
-import PubNubReact from "pubnub-react";
 import haversine from "haversine";
-import pick from "lodash/pick";
 
-const screen = Dimensions.get("window");
-
-const ASPECT_RATIO = screen.width / screen.height;
 const LATITUDE = 29.95539;
 const LONGITUDE = 78.07513;
-const LATITUDE_DELTA = 0.0922;
-const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
+const LATITUDE_DELTA = 0.009;
+const LONGITUDE_DELTA = 0.009;
 
 class AnimatedMarkers extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      latitude: 29.95539,
-      longitude: 78.07513,
+      latitude: LATITUDE,
+      longitude: LONGITUDE,
       routeCoordinates: [],
       distanceTravelled: 0,
-      polyCoords: [],
       prevLatLng: {},
       coordinate: new AnimatedRegion({
         latitude: LATITUDE,
         longitude: LONGITUDE
       })
     };
-
-    // Pubnub
-    this.pubnub = new PubNubReact({
-      publishKey: "YOUR_PUBNUB_PUBLISH_KEY",
-      subscribeKey: "YOUR_PUBNUB_SUBSCRIBE_KEY"
-    });
-    this.pubnub.init(this);
   }
 
   componentWillMount() {
@@ -57,37 +43,16 @@ class AnimatedMarkers extends React.Component {
     );
   }
 
-  componentDidUpdate() {
-    this.pubnub.publish({
-      message: {
-        latitude: this.state.latitude,
-        longitude: this.state.longitude
-      },
-      channel: "channel1"
-    });
-    console.log("component is updating");
-  }
-
   componentDidMount() {
     this.watchID = navigator.geolocation.watchPosition(
       position => {
-        const {
-          coordinate,
-          polyCoords,
-          routeCoordinates,
-          distanceTravelled
-        } = this.state;
+        const { coordinate, routeCoordinates, distanceTravelled } = this.state;
         const { latitude, longitude } = position.coords;
 
         const newCoordinate = {
           latitude,
           longitude
         };
-
-        const positionLatLngs = pick(position.coords, [
-          "latitude",
-          "longitude"
-        ]);
 
         if (Platform.OS === "android") {
           if (this.marker) {
@@ -103,8 +68,7 @@ class AnimatedMarkers extends React.Component {
         this.setState({
           latitude,
           longitude,
-          polyCoords: polyCoords.concat([newCoordinate]),
-          routeCoordinates: routeCoordinates.concat([positionLatLngs]),
+          routeCoordinates: routeCoordinates.concat([newCoordinate]),
           distanceTravelled:
             distanceTravelled + this.calcDistance(newCoordinate),
           prevLatLng: newCoordinate
@@ -115,31 +79,19 @@ class AnimatedMarkers extends React.Component {
     );
   }
 
-  componentWillUnmount() {
-    navigator.geolocation.clearWatch(this.watchID);
-
-    // Unsubscribe pubnub channel
-    this.pubnub.unsubscribe({
-      channels: ["channel1"]
-    });
-  }
-
   calcDistance = newLatLng => {
     const { prevLatLng } = this.state;
     return haversine(prevLatLng, newLatLng) || 0;
   };
 
-  getMapRegion() {
-    return {
-      latitude: this.state.latitude,
-      longitude: this.state.longitude,
-      latitudeDelta: 0.009,
-      longitudeDelta: 0.009
-    };
-  }
+  getMapRegion = () => ({
+    latitude: this.state.latitude,
+    longitude: this.state.longitude,
+    latitudeDelta: LATITUDE_DELTA,
+    longitudeDelta: LONGITUDE_DELTA
+  });
 
   render() {
-    console.log(this.state.routeCoordinates);
     return (
       <View style={styles.container}>
         <MapView
@@ -149,13 +101,8 @@ class AnimatedMarkers extends React.Component {
           loadingEnabled
           region={this.getMapRegion()}
         >
-          <Polyline coordinates={this.state.polyCoords} strokeWidth={5} />
-          <Marker.Animated
-            ref={marker => {
-              this.marker = marker;
-            }}
-            coordinate={this.state.coordinate}
-          />
+          <Polyline coordinates={this.state.routeCoordinates} strokeWidth={5} />
+          <Marker.Animated coordinate={this.state.coordinate} />
         </MapView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.bubble, styles.button]}>
