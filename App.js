@@ -102,7 +102,11 @@ class AnimatedMarkers extends React.Component {
           region={this.getMapRegion()}
         >
           <Polyline coordinates={this.state.routeCoordinates} strokeWidth={5} />
-          <Marker.Animated coordinate={this.state.coordinate} />
+          <Marker.Animated 
+            ref={marker => {
+              this.marker = marker;
+            }}
+            coordinate={this.state.coordinate} />
         </MapView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.bubble, styles.button]}>
