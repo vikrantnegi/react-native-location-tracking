@@ -1,6 +1,8 @@
 # react-native-location-tracking
 Tracks user and draws a path as the user location changes.
 
+Read article posted [Medium](https://medium.com/quick-code/react-native-location-tracking-14ab2c9e2db8)
+
 ![alt tag](./assets/location-tracking.gif)
 
 ## Installation
