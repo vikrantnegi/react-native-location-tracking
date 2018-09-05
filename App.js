@@ -44,6 +44,7 @@ class AnimatedMarkers extends React.Component {
   }
 
   componentDidMount() {
+    const { coordinate } = this.state;
     this.watchID = navigator.geolocation.watchPosition(
       position => {
         const { coordinate, routeCoordinates, distanceTravelled } = this.state;
