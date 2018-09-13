@@ -79,6 +79,10 @@ class AnimatedMarkers extends React.Component {
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 }
     );
   }
+  
+  componentWillUnmount() {
+    navigator.geolocation.clearWatch(this.watchID);
+  }
 
   calcDistance = newLatLng => {
     const { prevLatLng } = this.state;
