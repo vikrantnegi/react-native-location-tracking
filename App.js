@@ -4,7 +4,6 @@
  *
  * @format
  * @flow
- * @lint-ignore-every XPLATJSCOPYRIGHT1
  */
 
 import React from "react";
@@ -53,8 +52,6 @@ class AnimatedMarkers extends React.Component {
   componentDidMount() {
     const { coordinate } = this.state;
 
-    this.requestCameraPermission();
-
     this.watchID = navigator.geolocation.watchPosition(
       position => {
         const { routeCoordinates, distanceTravelled } = this.state;
@@ -64,7 +61,6 @@ class AnimatedMarkers extends React.Component {
           latitude,
           longitude
         };
-        console.log({ newCoordinate });
 
         if (Platform.OS === "android") {
           if (this.marker) {
@@ -110,27 +106,6 @@ class AnimatedMarkers extends React.Component {
   calcDistance = newLatLng => {
     const { prevLatLng } = this.state;
     return haversine(prevLatLng, newLatLng) || 0;
-  };
-
-  requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
-        {
-          title: "Location Access Permission",
-          buttonNeutral: "Ask Me Later",
-          buttonNegative: "Cancel",
-          buttonPositive: "OK"
-        }
-      );
-      if (granted === PermissionsAndroid.RESULTS.GRANTED) {
-        console.log("You can use the camera");
-      } else {
-        console.log("Camera permission denied");
-      }
-    } catch (err) {
-      console.warn(err);
-    }
   };
 
   render() {

@@ -9,27 +9,28 @@
   "dependencies": {
     "haversine": "^1.1.0",
     "hoek": "^5.0.3",
-    "lodash": "^4.17.5",
+    "lodash": "^4.17.14",
     "prop-types": "^15.6.1",
     "pubnub": "^4.20.3",
     "pubnub-react": "^1.2.0",
-    "react": "^16.6.3",
-    "react-native": "^0.58.0",
-    "react-native-maps": "0.23.0"
+    "react": "^16.8.3",
+    "react-native": "^0.59.10",
+    "react-native-maps": "0.24.2"
   },
   "devDependencies": {
-    "babel-core": "^7.0.0-bridge.0",
+    "@babel/core": "^7.4.5",
+    "@babel/runtime": "^7.4.5",
     "babel-eslint": "^8.2.2",
-    "babel-jest": "23.6.0",
+    "babel-jest": "^24.8.0",
     "eslint": "^4.9.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-config-prettier": "^2.9.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
-    "jest": "23.6.0",
-    "metro-react-native-babel-preset": "0.51.1",
-    "react-test-renderer": "16.3.1"
+    "jest": "^24.8.0",
+    "metro-react-native-babel-preset": "^0.54.1",
+    "react-test-renderer": "16.8.1"
   },
   "jest": {
     "preset": "react-native"
