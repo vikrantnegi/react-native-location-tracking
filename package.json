@@ -9,7 +9,7 @@
   "dependencies": {
     "haversine": "^1.1.0",
     "hoek": "^5.0.3",
-    "lodash": "^4.17.14",
+    "lodash": "^4.17.19",
     "prop-types": "^15.6.1",
     "pubnub": "^4.20.3",
     "pubnub-react": "^1.2.0",
