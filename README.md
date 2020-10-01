@@ -1,5 +1,5 @@
 # react-native-location-tracking
-Tracks user and draws a path as the user location changes.
+Tracks user and draws a path as the user location changes. This app is built using the PUBNUB for realtime updates and React Native for handling the frontend.
 
 Read article posted on [Medium](https://medium.com/quick-code/react-native-location-tracking-14ab2c9e2db8)
 
