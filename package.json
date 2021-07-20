@@ -14,7 +14,7 @@
     "pubnub": "^4.20.3",
     "pubnub-react": "^1.2.0",
     "react": "^16.8.3",
-    "react-native": "^0.59.10",
+    "react-native": "^0.62.3",
     "react-native-maps": "0.24.2"
   },
   "devDependencies": {
